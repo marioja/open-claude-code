@@ -14,6 +14,7 @@
  * are never interpolated into a shell string — no command injection.
  */
 import { execFileSync } from 'child_process';
+import { windowsSpawnOptions } from '../core/spawn-options.mjs';
 import path from 'path';
 
 export const GrepTool = {
@@ -108,6 +109,7 @@ export const GrepTool = {
                     encoding: 'utf-8',
                     maxBuffer: 10 * 1024 * 1024,
                     timeout: 30000,
+                    ...windowsSpawnOptions(),
                 });
             } catch (e) {
                 // exit code 1 from grep/rg means no matches — not an error

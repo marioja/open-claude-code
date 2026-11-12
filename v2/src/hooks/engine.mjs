@@ -5,6 +5,7 @@
  * Prompt and agent evaluators are not supported.
  */
 import { execSync, execFileSync } from 'node:child_process';
+import { windowsSpawnOptions } from '../core/spawn-options.mjs';
 
 export class HookEngine {
     constructor(hooksConfig = {}) { this.hooks = hooksConfig; }
@@ -134,7 +135,7 @@ export class HookEngine {
                 return this._parseOutput(await this._readHTTPResponse(response), true);
             }
             if (hook.command) {
-                const options = { encoding: 'utf-8', timeout,
+                const options = { encoding: 'utf-8', timeout, ...windowsSpawnOptions(),
                     input: JSON.stringify(payload), stdio: ['pipe', 'pipe', 'pipe'],
                     env: { ...process.env, HOOK_EVENT: String(context.event || ''),
                         HOOK_TOOL: String(context.toolName || ''), HOOK_INPUT: JSON.stringify(context.input || {}) } };

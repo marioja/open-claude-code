@@ -13,6 +13,7 @@
  */
 
 import { execFileSync } from 'child_process';
+import { windowsSpawnOptions } from '../core/spawn-options.mjs';
 import path from 'path';
 
 export const LspTool = {
@@ -89,7 +90,7 @@ function getDiagnostics(filePath, language) {
                     result = execFileSync(
                         'npx',
                         ['tsc', '--noEmit', '--pretty', 'false', filePath],
-                        { encoding: 'utf-8', timeout: 15000 }
+                        { encoding: 'utf-8', timeout: 15000, ...windowsSpawnOptions() }
                     );
                 } catch (e) {
                     result = e.stdout || e.stderr || '';
@@ -102,7 +103,7 @@ function getDiagnostics(filePath, language) {
                     result = execFileSync(
                         'python3',
                         ['-m', 'py_compile', filePath],
-                        { encoding: 'utf-8', timeout: 10000 }
+                        { encoding: 'utf-8', timeout: 10000, ...windowsSpawnOptions() }
                     );
                 } catch (e) {
                     result = e.stderr || e.stdout || '';

@@ -9,6 +9,7 @@
  * - ANSI code stripping by default
  */
 import { spawn } from 'child_process';
+import { windowsSpawnOptions } from '../core/spawn-options.mjs';
 
 // Strip ANSI escape sequences
 function stripAnsi(str) {
@@ -53,6 +54,7 @@ export const BashTool = {
                 env: { ...process.env },
                 stdio: ['pipe', 'pipe', 'pipe'],
                 timeout: 0, // we handle timeout ourselves
+                ...windowsSpawnOptions(),
             });
 
             proc.stdout.on('data', (chunk) => {
@@ -125,6 +127,7 @@ function runBackground(command) {
     const proc = spawn('bash', ['-c', command], {
         detached: true,
         stdio: ['ignore', 'pipe', 'pipe'],
+        ...windowsSpawnOptions({ detached: true }),
     });
 
     let stdout = '';

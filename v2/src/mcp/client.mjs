@@ -11,6 +11,7 @@
  */
 
 import { spawn } from 'child_process';
+import { windowsSpawnOptions } from '../core/spawn-options.mjs';
 
 const MCP_PROTOCOL_VERSION = '2024-11-05';
 
@@ -58,6 +59,7 @@ export class McpClient {
         this.process = spawn(this.config.command, this.config.args || [], {
             stdio: ['pipe', 'pipe', 'pipe'],
             env: { ...process.env, ...this.config.env },
+            ...windowsSpawnOptions(),
         });
 
         this.process.stdout.on('data', (data) => this._onData(data));

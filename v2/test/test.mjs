@@ -2237,6 +2237,18 @@ section('Anthropic base URL validation');
     }
 }
 
+// ---------- Windows spawn window policy (anthropics/claude-code#91264) ----------
+
+section('Windows spawn options');
+{
+    const { windowsSpawnOptions } = await import('../src/core/spawn-options.mjs');
+    assertEqual(JSON.stringify(windowsSpawnOptions({ platform: 'linux', consoleAvailable: false })), '{}', 'non-Windows: no options');
+    assertEqual(JSON.stringify(windowsSpawnOptions({ platform: 'darwin', detached: true })), '{}', 'macOS detached: no options');
+    assertEqual(windowsSpawnOptions({ platform: 'win32', consoleAvailable: false }).windowsHide, true, 'win32 without console: hide window');
+    assertEqual(JSON.stringify(windowsSpawnOptions({ platform: 'win32', consoleAvailable: true })), '{}', 'win32 with console: inherit, no extra conhost');
+    assertEqual(windowsSpawnOptions({ platform: 'win32', consoleAvailable: true, detached: true }).windowsHide, true, 'win32 detached: always hide');
+}
+
 // ---------- Summary ----------
 
 console.log('\n========================================');
